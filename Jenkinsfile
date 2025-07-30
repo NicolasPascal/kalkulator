@@ -1,20 +1,15 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.10'
-        }
-    }
+    agent any
 
     stages {
-        stage('Install Dependencies') {
+        stage('Run in Python Docker') {
             steps {
-                sh 'pip install pytest'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'pytest test_app.py'
+                script {
+                    docker.image('python:3.10').inside {
+                        sh 'pip install pytest'
+                        sh 'pytest test_app.py'
+                    }
+                }
             }
         }
     }
